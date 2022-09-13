@@ -15,11 +15,12 @@ Releases of LoginAssistFFXI can be found below:
 
 ## Setup and running LoginAssistFFXI
 
-1. Please note that some parts of this programs logic depend somewhat on the resolution of your monitor. This has mostly been tested on 1920x1080, and 3840x2160 monitors. I at the very least suspect people with resolutions outside of this may run into LoginAssist closing only part way through the login process, particularly after transitioning from playonline to FFXI windows. Please see the feedback section below in the event you run into problems.
-2. First find the file called login_data.json under the data folder. Some examples of appropriate account values have been provided as illustration. Any accounts you want to login via the Guest Login tab should be put at the top of the member accounts with `"guest":true` being set. Any unused accounts should be removed from this file. **Please note the lack of a trailing comma after the final } in the file**.
-3. **Notice that the member accounts with `"guest": false` set MUST be in the same order from top to bottom as they are in the following image**
+1. Most of this program was tested with borderless window. If you are using windowed mode you may want to consider switching to borderless. Because in windowed mode LoginAssist may stop partway through the login process.
+2. Please note that some parts of this programs logic depend somewhat on the resolution of your monitor. This has mostly been tested on 1920x1080, and 3840x2160 monitors. I at the very least suspect people with resolutions outside of this may run into LoginAssist closing only part way through the login process, particularly after transitioning from playonline to FFXI windows. Please see the feedback section below in the event you run into problems.
+3. First find the file called login_data.json under the data folder. Some examples of appropriate account values have been provided as illustration. Any accounts you want to login via the Guest Login tab should be put at the top of the member accounts with `"guest":true` being set. Any unused accounts should be removed from this file. **Please note the lack of a trailing comma after the final } in the file**.
+4. **Notice that the member accounts with `"guest": false` set MUST be in the same order from top to bottom as they are in the following image**
    ![PlayonlineLoginScreen](img/PlayonlineExample.png)
-4. If you only want to login one character the file should look something like this, with your actual account values substitued in and `"guest": false` being set if your single account is the top spot in the member list:
+5. If you only want to login one character the file should look something like this, with your actual account values substitued in and `"guest": false` being set if your single account is the top spot in the member list:
 
     ```
     [
@@ -35,15 +36,15 @@ Releases of LoginAssistFFXI can be found below:
      ]
     ```
 
-5. If you use two factor authentication for any particular account make sure you set `"onetimepassword_enabled": true` for the accounts with it active.
-6. LoginAssist is currently not able to deal with the screens where you must wait to download files after an update. Make sure FFXI is completely up to date after every monthly update before trying to use LoginAssist.
-7. You must have open on your primary monitor the same amount of playonline windows as you have listed in the file. In the example login_data.json file there are six accounts, therefore you would need to have 6 playonline windows open to the screen in the image above.
-8. **Before running LoginAssistFFXI you should probably know how to stop it. There are currently two failsafes to stop the program:**
+6. If you use two factor authentication for any particular account make sure you set `"onetimepassword_enabled": true` for the accounts with it active.
+7. LoginAssist is currently not able to deal with the screens where you must wait to download files after an update. Make sure FFXI is completely up to date after every monthly update before trying to use LoginAssist.
+8. You must have open on your primary monitor the same amount of playonline windows as you have listed in the file. In the example login_data.json file there are six accounts, therefore you would need to have 6 playonline windows open to the screen in the image above.
+9. **Before running LoginAssistFFXI you should probably know how to stop it. There are currently two failsafes to stop the program:**
     1. Place your mouse cursor into the top left corner of your primary monitor. Unfortunately, I have found this failsafe's behaviour to be quite persnickety. You may need to try several times to get this to work.
     2. You will notice a black console window that moves to the top right of your screen. If you click on the top right X, it will also stop the program. Picture below: ![LoginAssistConsole](./img/EmergencyExitConsole.png)
-9. If you are using Windower, I recommend making sure the plugin WinControl/position_manager are disabled until you are fully logged in.
-10. Once all of your playonline windows are on your primary monitor as well as your mouse cursor, you can run LoginAssistFFXI.exe. Keep in mind you will need to run it as an administrator.
-11. If you have one time passwords active, you will still have to manually enter it for each character in the popup box shown below. Just **left click** the ok button after entering it. After all of those are entered you should (hopefully) just have to wait until you are logged in!
+10. If you are using Windower, I recommend making sure the plugin WinControl/position_manager are disabled until you are fully logged in.
+11. Once all of your playonline windows are on your primary monitor as well as your mouse cursor, you can run LoginAssistFFXI.exe. Keep in mind you will need to run it as an administrator.
+12. If you have one time passwords active, you will still have to manually enter it for each character in the popup box shown below. Just **left click** the ok button after entering it. After all of those are entered you should (hopefully) just have to wait until you are logged in!
 
 ![TwoFactorAuthBox](./img/OneTimePasswordBox.PNG)
 

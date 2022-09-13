@@ -1,7 +1,5 @@
 from typing import Final
 
-from CustomExceptions import EmergencyExitException
-
 GUEST_LOGIN: Final[tuple[int, int]] = (315, 343)
 PLAYONLINE_ID_LOGIN: Final[tuple[int, int]] = (969, 409)
 PLAYONLINE_PASSWORD_OPEN: Final[tuple[int, int]] = (975, 452)
