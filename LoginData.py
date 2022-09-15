@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+VALID_MEMBER_VALS = {0, 1, 2, 3}
+
 
 @dataclass
 class LoginData:
@@ -11,4 +13,4 @@ class LoginData:
     square_enix_password: str
     windower_profile: str
     onetimepassword_enabled: bool
-    guest: bool
+    member: int

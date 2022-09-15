@@ -2,14 +2,15 @@ from distutils.cmd import Command
 import tkinter as tk
 from LoginData import LoginData
 from CustomExceptions import InvalidProfileException
+from LoginDataValidator import get_requested_accounts
 
 DEFAULT_BUTTON_TEXT = 'No valid profile entered'
 
 
 class ProfileSelectBox:
-    def __init__(self, profiles: dict[str, list[str]], char_names: set[str]):
+    def __init__(self, profiles: dict[str, list[LoginData]], char_names: set[str]):
         self.profiles = profiles
-        self.selected_profile = None
+        self.selected_profile: None | list[LoginData] = None
         self.char_names = char_names
 
         self.window = tk.Tk()
@@ -19,7 +20,8 @@ class ProfileSelectBox:
         tk.Label(self.window, text='Characters').grid(row=0, column=1)
         for i, (profile, accounts) in enumerate(self.profiles.items()):
             tk.Label(self.window, text=f'{profile:>}').grid(row=i + 1, column=0)
-            tk.Label(self.window, text=f'{", ".join(accounts):<}').grid(
+            names = [account.char_name for account in accounts]
+            tk.Label(self.window, text=f'{", ".join(names):<}').grid(
                 row=i + 1, column=1
             )
 
@@ -45,10 +47,12 @@ class ProfileSelectBox:
 
     def check_profile_validity(self, event) -> None:
         if self.profile_entry.get() in self.profiles:
+            names = [
+                account.char_name
+                for account in self.profiles.get(self.profile_entry.get())
+            ]
             self.confirm_button['state'] = tk.NORMAL
-            self.confirm_button[
-                'text'
-            ] = f'Click here to login on {", ".join(self.profiles.get(self.profile_entry.get()))}'
+            self.confirm_button['text'] = f'Click here to login on {", ".join(names)}'
             self.confirm_button['bg'] = 'green'
         elif self.profile_entry.get() in self.char_names:
             self.confirm_button['state'] = tk.NORMAL
@@ -62,5 +66,5 @@ class ProfileSelectBox:
             self.confirm_button['bg'] = '#f0f0f0'
 
     def login_selected(self) -> str:
-        self.selected_profile = self.profile_entry.get()
+        self.selected_profile = get_requested_accounts(self.profile_entry.get())
         self.window.destroy()

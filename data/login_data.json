@@ -5,8 +5,9 @@
         "playonline_password":"passwordP",
         "square_enix_id":"Test123",
         "square_enix_password":"passwordSE",
+        "windower_profile": "default",
         "onetimepassword_enabled": false,
-        "guest":true
+        "member":-1
     },
     {
         "character_name":"GuestTwo",
@@ -14,8 +15,9 @@
         "playonline_password":"password",
         "square_enix_id":"Test123",
         "square_enix_password":"passwordSE",
+        "windower_profile": "default",
         "onetimepassword_enabled": false,
-        "guest":true
+        "member":-1
     },
     {
         "character_name":"MemberOne",
@@ -23,8 +25,9 @@
         "playonline_password":"passwordP",
         "square_enix_id":"Test456",
         "square_enix_password":"passwordSE",
+        "windower_profile": "default",
         "onetimepassword_enabled":false,
-        "guest":false
+        "member":0
     },
     {
         "character_name":"MemberTwo",
@@ -32,8 +35,9 @@
         "playonline_password":"passwordP",
         "square_enix_id":"Test456",
         "square_enix_password":"passwordSE",
+        "windower_profile": "default",
         "onetimepassword_enabled":false,
-        "guest":false
+        "member":1
     },
     {
         "character_name":"MemberThree",
@@ -41,8 +45,9 @@
         "playonline_password":"passwordP",
         "square_enix_id":"Test456",
         "square_enix_password":"passwordSE",
+        "windower_profile": "default",
         "onetimepassword_enabled":false,
-        "guest":false
+        "member":2
     },
     {
         "character_name":"MemberFour",
@@ -50,7 +55,8 @@
         "playonline_password":"passwordP",
         "square_enix_id":"Test456",
         "square_enix_password":"passwordSE",
+        "windower_profile": "default",
         "onetimepassword_enabled":false,
-        "guest":false
+        "member":3
     }
 ]

@@ -7,7 +7,7 @@ import cv2
 
 import PIL
 
-from LoginData import LoginData
+from LoginData import LoginData, VALID_MEMBER_VALS
 from CustomExceptions import MissingPlayonlineWindowException, TimeoutException
 import LoginDataValidator
 import PositionConstants
@@ -16,6 +16,8 @@ import asyncio
 import logging
 import time
 from dataclasses import dataclass
+
+from ProfileSelectBox import ProfileSelectBox
 
 login_logger = logging.getLogger(__name__)
 login_logger.setLevel(logging.DEBUG)
@@ -32,7 +34,6 @@ ag.FAILSAFE = True  # Move mouse to upper-left to abort program
 
 WindowType = gw._pygetwindow_win.Win32Window
 
-member_index = 0
 primary_monitor_res: tuple[int, int] = ag.size()
 
 
@@ -68,7 +69,7 @@ async def move_and_resize_windows(
 
 async def playonline_login(account: LoginData) -> None:
 
-    if account.guest:
+    if account.member not in VALID_MEMBER_VALS:
         login_logger.debug(f'Starting playonline login process on: guest')
         ag.leftClick(*PositionConstants.GUEST_LOGIN)
         await asyncio.sleep(0.5)
@@ -129,9 +130,7 @@ async def playonline_login(account: LoginData) -> None:
         ag.leftClick()
         login_logger.debug(f'Ending playonline login process on: guest')
     else:
-        global member_index
-        ag.leftClick(*PositionConstants.MEMBER_LOGIN_POSITIONS_LIST[member_index])
-        member_index += 1
+        ag.leftClick(*PositionConstants.MEMBER_LOGIN_POSITIONS_LIST[account.member])
         await asyncio.sleep(0.5)
         ag.leftClick(*PositionConstants.LOGIN_INFO_LOGIN_BUTTON)
         ag.moveTo(*PositionConstants.SQUARE_ENIX_PASSWORD_OPEN)
@@ -236,7 +235,7 @@ async def read_tos_on_guests(
 ) -> None:
     for window, account in zip(playonline_windows, login_data):
         activate_window(window)
-        if account.guest:
+        if account.member not in VALID_MEMBER_VALS:
             waitout_image('./img/ToS.PNG', 15)
             login_logger.debug(f'Reading TOS on guest')
             await asyncio.sleep(1)
@@ -280,12 +279,17 @@ def get_ffxi_windows() -> list[WindowType] | None:
 
 
 async def find_ffxi_windows(
-    window_count: int, timeout_duration: float
+    window_count: int, already_running_window_ids: set[int], timeout_duration: float
 ) -> None | list[WindowType]:
     start = time.perf_counter()
     ffxi_windows = []
     while time.perf_counter() - start < timeout_duration:
-        ffxi_windows = get_ffxi_windows()
+        ffxi_windows = [
+            window
+            for window in get_ffxi_windows()
+            if window._hWnd not in already_running_window_ids
+        ]
+
         if ffxi_windows and len(ffxi_windows) == window_count:
             return ffxi_windows
         await asyncio.sleep(0.5)
@@ -390,27 +394,39 @@ async def main() -> None:
         clear_debug_log()
         get_console_window()
         login_logger.debug(f'Monitor Resolution: {ag.size()}')
-        login_data = LoginDataValidator.parse_login_data()
-        windower_profiles = LoginDataValidator.gather_windower_profiles(login_data)
+        all_char_data = LoginDataValidator.parse_login_data()
+        windower_profiles = LoginDataValidator.gather_windower_profiles(all_char_data)
+        char_names = LoginDataValidator.gather_charnames(all_char_data)
 
-        playonline_windows = find_playonline_windows(login_data)
+        psb = ProfileSelectBox(windower_profiles, char_names)
+        accounts_to_login = psb.selected_profile
+
+        already_running_ffxi_window_ids = set(
+            [window._hWnd for window in get_ffxi_windows()]
+        )
+
+        playonline_windows = find_playonline_windows(accounts_to_login)
 
         await move_and_resize_windows(playonline_windows)
 
         await asyncio.sleep(2)
 
-        await login_to_playonline(playonline_windows, login_data)
+        await login_to_playonline(playonline_windows, accounts_to_login)
 
-        await read_tos_on_guests(playonline_windows, login_data)
+        await read_tos_on_guests(playonline_windows, accounts_to_login)
 
-        await start_ffxi(playonline_windows, login_data)
+        await start_ffxi(playonline_windows, accounts_to_login)
 
-        await playonline_to_ffxi_window_transition(login_data, playonline_windows)
+        await playonline_to_ffxi_window_transition(
+            accounts_to_login, playonline_windows
+        )
 
-        ffxi_windows = await find_ffxi_windows(len(login_data), 120)
+        ffxi_windows = await find_ffxi_windows(
+            len(accounts_to_login), already_running_ffxi_window_ids, 120
+        )
         await move_and_resize_windows(ffxi_windows, *PositionConstants.FFXI_RESOLUTION)
         await asyncio.sleep(4)
-        await select_ffxi_character(ffxi_windows, login_data)
+        await select_ffxi_character(ffxi_windows, accounts_to_login)
     except MissingPlayonlineWindowException as e:
         login_logger.debug(
             f'Account count: {e.account_count}, Window Count {e.window_count}, need to be equal'

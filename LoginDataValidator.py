@@ -21,7 +21,7 @@ def parse_login_data() -> list[LoginData]:
                 square_enix_password=account['square_enix_password'],
                 windower_profile=account['windower_profile'],
                 onetimepassword_enabled=account['onetimepassword_enabled'],
-                guest=account['guest'],
+                member=account['member'],
             )
         )
 
@@ -30,16 +30,28 @@ def parse_login_data() -> list[LoginData]:
     return login_data_list
 
 
-def gather_windower_profiles(accounts: list[LoginData]) -> dict[str, list[str]]:
+def gather_windower_profiles(accounts: list[LoginData]) -> dict[str, list[LoginData]]:
     profile_charnames = dict()
 
     for account in accounts:
         if account.windower_profile in profile_charnames:
-            profile_charnames[account.windower_profile].append(account.char_name)
+            profile_charnames[account.windower_profile].append(account)
         else:
-            profile_charnames[account.windower_profile] = [account.char_name]
+            profile_charnames[account.windower_profile] = [account]
 
     return profile_charnames
+
+
+# This could be improved TODO
+def get_requested_accounts(profile_or_char_name: str) -> list[LoginData]:
+    all_accounts = parse_login_data()
+    login_accounts = []
+    for account in all_accounts:
+        if account.char_name == profile_or_char_name:
+            login_accounts.append(account)
+        elif account.windower_profile == profile_or_char_name:
+            login_accounts.append(account)
+    return login_accounts
 
 
 def gather_charnames(accounts: list[LoginData]) -> set[str]:
