@@ -21,3 +21,8 @@ class PlayonlineIDFormatException(Exception):
 @dataclass
 class EmergencyExitException(Exception):
     msg: str
+
+
+@dataclass
+class InvalidProfileException(Exception):
+    msg: str

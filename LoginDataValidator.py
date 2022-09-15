@@ -42,6 +42,13 @@ def gather_windower_profiles(accounts: list[LoginData]) -> dict[str, list[str]]:
     return profile_charnames
 
 
+def gather_charnames(accounts: list[LoginData]) -> set[str]:
+    names = set()
+    for account in accounts:
+        names.add(account.char_name)
+    return names
+
+
 def validate_playonline_id(login_data: list[LoginData]) -> None:
     # Playonline ID has 4 capital letters followed by 4 digits
     for account in login_data:

@@ -36,12 +36,6 @@ member_index = 0
 primary_monitor_res: tuple[int, int] = ag.size()
 
 
-async def delay_after_function(delay: float, async_func: Callable, *args: Any) -> Any:
-    val = await async_func(*args)
-    await asyncio.sleep(delay)
-    return val
-
-
 def find_playonline_windows(
     accounts_list: list[LoginData], enable_exception: bool = True
 ) -> list[WindowType]:
@@ -397,6 +391,7 @@ async def main() -> None:
         get_console_window()
         login_logger.debug(f'Monitor Resolution: {ag.size()}')
         login_data = LoginDataValidator.parse_login_data()
+        windower_profiles = LoginDataValidator.gather_windower_profiles(login_data)
 
         playonline_windows = find_playonline_windows(login_data)
 
