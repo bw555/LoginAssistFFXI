@@ -19,6 +19,7 @@ def parse_login_data() -> list[LoginData]:
                 playonline_password=account['playonline_password'],
                 square_enix_id=account['square_enix_id'],
                 square_enix_password=account['square_enix_password'],
+                windower_profile=account['windower_profile'],
                 onetimepassword_enabled=account['onetimepassword_enabled'],
                 guest=account['guest'],
             )
@@ -27,6 +28,18 @@ def parse_login_data() -> list[LoginData]:
     validate_playonline_id(login_data_list)
 
     return login_data_list
+
+
+def gather_windower_profiles(accounts: list[LoginData]) -> dict[str, list[str]]:
+    profile_charnames = dict()
+
+    for account in accounts:
+        if account.windower_profile in profile_charnames:
+            profile_charnames[account.windower_profile].append(account.char_name)
+        else:
+            profile_charnames[account.windower_profile] = [account.char_name]
+
+    return profile_charnames
 
 
 def validate_playonline_id(login_data: list[LoginData]) -> None:

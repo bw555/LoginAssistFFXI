@@ -9,5 +9,6 @@ class LoginData:
     playonline_password: str
     square_enix_id: str
     square_enix_password: str
+    windower_profile: str
     onetimepassword_enabled: bool
     guest: bool
