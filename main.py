@@ -171,8 +171,16 @@ async def start_ffxi(windows: list[WindowType], accounts: list[LoginData]) -> No
         ag.moveTo(1, 1)
         activate_window(window)
         # This can get caught clicking on something else right after an update!
-        ffxi_button = waitout_image('./img/FFXIButton.PNG', timeout_duration=30)
-        ag.leftClick(*PositionConstants.FFXI_BUTTON)
+        ffxi_button = waitout_image(
+            './img/crystal.PNG', timeout_duration=10, exception_enable=False
+        )
+        if ffxi_button:
+            ag.leftClick(*ffxi_button)
+            login_logger.debug(f'clicked crystal')
+        else:
+            ffxi_button = waitout_image('./img/FFXIButton.PNG', timeout_duration=30)
+            ag.leftClick(*PositionConstants.FFXI_BUTTON)
+            login_logger.debug(f'No crystal')
 
     for window, account in zip(windows, accounts):
         activate_window(window)
@@ -351,18 +359,19 @@ async def select_ffxi_character(
     # On second character select hit enter twice (maybe .2 seconds apart)
     for window, account in zip(ffxi_windows, accounts):
         activate_window(window)
-        # ag.moveTo(1, 1)
-        await asyncio.sleep(1)
+        ag.moveTo(1, 1)
+        # await asyncio.sleep(1)
         second_select_position = waitout_image(
             img_resolution_select('./img/SecondSelectCharacter.PNG'),
             10,
             PositionConstants.IMG_REGION_FFXI,
         )
         login_logger.debug(f'Found secondselectcharacter image')
-        await asyncio.sleep(1)
+        await asyncio.sleep(0.3)
         ag.leftClick(*PositionConstants.CHARACTER_SELECT_SECOND)
-        await asyncio.sleep(1)
+        await asyncio.sleep(0.3)
         ag.leftClick(*PositionConstants.CHARACTER_SELECT_THIRD)
+        await asyncio.sleep(0.3)
         window.resizeTo(*primary_monitor_res)
 
 
@@ -425,7 +434,7 @@ async def main() -> None:
             len(accounts_to_login), already_running_ffxi_window_ids, 120
         )
         await move_and_resize_windows(ffxi_windows, *PositionConstants.FFXI_RESOLUTION)
-        await asyncio.sleep(4)
+        await asyncio.sleep(1)
         await select_ffxi_character(ffxi_windows, accounts_to_login)
     except MissingPlayonlineWindowException as e:
         login_logger.debug(
