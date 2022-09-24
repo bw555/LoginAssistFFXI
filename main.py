@@ -170,6 +170,9 @@ async def start_ffxi(windows: list[WindowType], accounts: list[LoginData]) -> No
         ag.moveTo(1, 1)
         activate_window(window)
         # This can get caught clicking on something else right after an update!
+        if len(windows) == 1:
+            await asyncio.sleep(1)
+
         ffxi_button = waitout_image(
             './img/crystal.PNG', timeout_duration=10, exception_enable=False
         )
@@ -367,18 +370,22 @@ async def select_ffxi_character(
             10,
             PositionConstants.IMG_REGION_FFXI,
         )
-        if len(ffxi_windows) == 1:
-            await asyncio.sleep(1)
-        else:
-            await asyncio.sleep(0.3)
 
-        ag.leftClick(*PositionConstants.CHARACTER_SELECT_SECOND)
-        # ag.moveTo(1, 1)
+        
         if len(ffxi_windows) == 1:
             await asyncio.sleep(2)
         else:
             await asyncio.sleep(0.3)
+
+        ag.leftClick(*PositionConstants.CHARACTER_SELECT_SECOND)
+        await asyncio.sleep(0.1)
+        ag.leftClick()
+
+        await asyncio.sleep(0.3)
+
         ag.leftClick(*PositionConstants.CHARACTER_SELECT_THIRD)
+        await asyncio.sleep(.1)
+        ag.leftClick()
 
         if len(ffxi_windows) == 1:
             await asyncio.sleep(2)
