@@ -19,7 +19,7 @@ class ProfileSelectBox:
         tk.Label(self.window, text='Characters').grid(row=0, column=1)
         for i, (profile, accounts) in enumerate(self.profiles.items()):
             tk.Label(self.window, text=f'{profile:>}').grid(row=i + 1, column=0)
-            names = [account.char_name for account in accounts]
+            names = [account.character_name for account in accounts]
             tk.Label(self.window, text=f'{", ".join(names):<}').grid(
                 row=i + 1, column=1
             )
@@ -47,7 +47,7 @@ class ProfileSelectBox:
     def check_profile_validity(self, event) -> None:
         if self.profile_entry.get() in self.profiles:
             names = [
-                account.char_name
+                account.character_name
                 for account in self.profiles.get(self.profile_entry.get())
             ]
             self.confirm_button['state'] = tk.NORMAL

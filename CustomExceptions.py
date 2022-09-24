@@ -26,3 +26,18 @@ class EmergencyExitException(Exception):
 @dataclass
 class InvalidProfileException(Exception):
     msg: str
+
+
+@dataclass
+class InvalidOneTimePasswordException(Exception):
+    msg: str
+
+
+@dataclass
+class RepeatedMemberException(Exception):
+    msg: str
+
+
+@dataclass
+class MemberNotADigitException(Exception):
+    msg: str

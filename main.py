@@ -1,4 +1,3 @@
-# pyinstaller --noconfirm --onefile --console main.py --distpath "./" -n "LoginAssistFFXI"
 from typing import Callable, Any
 import pyautogui as ag
 import pygetwindow as gw
@@ -72,7 +71,6 @@ async def move_and_resize_windows(
 
 
 async def playonline_login(account: LoginData) -> None:
-
     if account.member not in VALID_MEMBER_VALS:
         login_logger.debug(f'Starting playonline login process on: guest')
         ag.leftClick(*PositionConstants.GUEST_LOGIN)
@@ -97,13 +95,10 @@ async def playonline_login(account: LoginData) -> None:
 
         login_logger.debug(f'Entered SquareEnixID for guest')
         if account.onetimepassword_enabled:
-            # await asyncio.sleep(0.5)
-            ag.moveTo(*PositionConstants.ONE_TIME_GUEST_TOGGLE_BOX)
-            ag.leftClick()
-            # await asyncio.sleep(0.1)
-            ag.moveTo(*PositionConstants.ONE_TIME_GUEST_ENABLE_BOX)
-            ag.leftClick()
-
+            await asyncio.sleep(0.1)
+            ag.leftClick(*PositionConstants.ONE_TIME_GUEST_TOGGLE_BOX)
+            await asyncio.sleep(0.1)
+            ag.leftClick(*PositionConstants.ONE_TIME_GUEST_ENABLE_BOX)
         ag.leftClick(*PositionConstants.GUEST_LOGIN_OK_BUTTON)
 
         await asyncio.sleep(0.7)
@@ -372,12 +367,24 @@ async def select_ffxi_character(
             10,
             PositionConstants.IMG_REGION_FFXI,
         )
-        login_logger.debug(f'Found secondselectcharacter image')
-        await asyncio.sleep(0.3)
+        if len(ffxi_windows) == 1:
+            await asyncio.sleep(1)
+        else:
+            await asyncio.sleep(0.3)
+
         ag.leftClick(*PositionConstants.CHARACTER_SELECT_SECOND)
-        await asyncio.sleep(0.3)
+        # ag.moveTo(1, 1)
+        if len(ffxi_windows) == 1:
+            await asyncio.sleep(2)
+        else:
+            await asyncio.sleep(0.3)
         ag.leftClick(*PositionConstants.CHARACTER_SELECT_THIRD)
-        await asyncio.sleep(0.3)
+
+        if len(ffxi_windows) == 1:
+            await asyncio.sleep(2)
+        else:
+            await asyncio.sleep(0.3)
+
         window.resizeTo(*dim)
 
 
@@ -409,7 +416,7 @@ async def main() -> None:
         clear_debug_log()
         get_console_window()
         login_logger.debug(f'Monitor Resolution: {ag.size()}')
-        all_char_data = LoginDataValidator.parse_login_data()
+        all_char_data = LoginDataValidator.parse_login_data_xml()
         windower_profiles = LoginDataValidator.gather_windower_profiles(all_char_data)
         char_names = LoginDataValidator.gather_charnames(all_char_data)
 
