@@ -23,11 +23,11 @@ class ProfileSelectBox:
         tk.Label(
             self.window,
             text='Windower Profile',
-            background='green',
+            background='#016001',
             foreground='white',
         ).grid(row=0, column=0, ipadx=10, padx=30, ipady=10, pady=5)
         tk.Label(
-            self.window, text='Characters', background='green', foreground='white'
+            self.window, text='Characters', background='#016001', foreground='white'
         ).grid(row=0, column=1, columnspan=max_count, ipadx=50, ipady=10, pady=5)
         for i, (profile, accounts) in enumerate(self.profiles.items()):
             tk.Button(
@@ -54,7 +54,7 @@ class ProfileSelectBox:
                     cursor='hand2',
                     foreground='white',
                     borderwidth=5,
-                ).grid(row=i + 1, column=col + 1, columnspan=1, pady=25)
+                ).grid(row=i + 1, column=col + 1, columnspan=1, pady=7)
 
         self.confirm_button = tk.Button(
             self.window,
@@ -74,13 +74,13 @@ class ProfileSelectBox:
             self.confirm_button['state'] = tk.NORMAL
             self.confirm_button['text'] = f'Click here to login on {", ".join(names)}'
             self.confirm_button['cursor'] = 'hand2'
-            self.confirm_button['bg'] = 'green'
+            self.confirm_button['bg'] = '#016001'
             self.selection = name
         elif name.lower() in {name.lower() for name in self.char_names}:
             self.confirm_button['state'] = tk.NORMAL
             self.confirm_button['text'] = f'Click here to login on {name.capitalize()}'
             self.confirm_button['cursor'] = 'hand2'
-            self.confirm_button['bg'] = 'green'
+            self.confirm_button['bg'] = '#016001'
             self.selection = name
         else:
             self.confirm_button['state'] = tk.DISABLED

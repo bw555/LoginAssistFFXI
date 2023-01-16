@@ -42,9 +42,14 @@ def parse_login_data_xml() -> list[LoginData]:
     login_data_list = []
     for account in accounts_xml.findall('account'):
         data = LoginData(*(['N/A'] * 8))
+        profiles = set()
         for xml_tag in account:
-            data.__setattr__(xml_tag.tag, xml_tag.text)
+            if xml_tag.tag == 'windower_profile':
+                profiles.add(xml_tag.text)
+            else:
+                data.__setattr__(xml_tag.tag, xml_tag.text)
 
+        data.__setattr__('windower_profile', profiles)
         data.onetimepassword_enabled = validate_onetimepassword(
             account.find('onetimepassword_enabled').text
         )
@@ -69,13 +74,14 @@ def validate_onetimepassword(otp: str) -> None | bool:
 
 
 def gather_windower_profiles(accounts: list[LoginData]) -> dict[str, list[LoginData]]:
-    profile_charnames = dict()
+    profile_charnames = dict() # Key is profile name, value is login data
 
     for account in accounts:
-        if account.windower_profile in profile_charnames:
-            profile_charnames[account.windower_profile].append(account)
-        else:
-            profile_charnames[account.windower_profile] = [account]
+        for profile in account.windower_profile:
+            if profile in profile_charnames:
+                profile_charnames[profile].append(account)
+            else:
+                profile_charnames[profile] = [account]
 
     return profile_charnames
 
@@ -87,7 +93,7 @@ def get_requested_accounts(profile_or_char_name: str) -> list[LoginData]:
     for account in all_accounts:
         if account.character_name == profile_or_char_name:
             login_accounts.append(account)
-        elif account.windower_profile == profile_or_char_name:
+        elif profile_or_char_name in account.windower_profile:
             login_accounts.append(account)
     return login_accounts
 
